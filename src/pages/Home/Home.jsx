@@ -169,8 +169,15 @@ export default function Home() {
     };
     const onInputCheckboxChange = e => {
         let value = e.target.value;
-        setCheckboxItems([...checkboxItems, value])
-        setSuervyData({ ...SuervyData, [e.target.name]: [...checkboxItems, value] });
+        if (e.target.checked) {
+            setCheckboxItems(prev => [...prev, value])
+            setSuervyData({ ...SuervyData, [e.target.name]: [...checkboxItems, value] });
+        } else {
+            setCheckboxItems(prev => prev.filter(item => item !== value))
+            setSuervyData({ ...SuervyData, [e.target.name]: [checkboxItems.filter(item => item !== value)] });
+        }
+
+
     };
     const [selectedImage, setSelectedImage] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
@@ -258,8 +265,8 @@ export default function Home() {
                                             return (
                                                 <div >
                                                     {item?.options.map((option, index) => (
-                                                        <div className='form-check' name={item?.name} onChange={onInputCheckboxChange}>
-                                                            <input type="checkbox" name={item?.name} key={index} value={option} className='form-check-input' />
+                                                        <div className='form-check'>
+                                                            <input type="checkbox" name={item?.name} onChange={onInputCheckboxChange} key={index} value={option} className='form-check-input' />
                                                             <label class="form-label text-capitalize">{option}</label>
                                                         </div>
                                                     ))
